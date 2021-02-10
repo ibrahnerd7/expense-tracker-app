@@ -12,7 +12,7 @@ class User {
       userName: json['userName'],
       email: json['email'],
       picture: json['picture'],
-      userId: json['id'],
+      userId: json['id'].toString(),
       token: json['token'],
     );
   }
