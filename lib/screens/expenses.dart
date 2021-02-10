@@ -141,7 +141,9 @@ class _ExpensesState extends State<Expenses> {
                       Expense expense = snapshot.data[index];
                       return ListTile(
                         leading: CircleAvatar(
-                          child: Text(index.toString()),
+                          radius: 30.0,
+                          backgroundImage: NetworkImage(expense.imageUrl),
+                          backgroundColor: Colors.transparent,
                         ),
                         title: Text(expense.title),
                         subtitle: Text("Kshs ${expense.amount}"),

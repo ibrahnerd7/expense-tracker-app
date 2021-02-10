@@ -57,8 +57,13 @@ class _SignInScreenState extends State<SignInScreen> {
     if (response.statusCode == 200) {
       return User.fromJson(jsonDecode(response.body));
     } else {
+      Get.snackbar("Error", "Failed to authenticate user");
+      setState(() {
+        isSubmitting=false;
+      });
       throw Exception('Failed to authenticate');
     }
+
   }
 
   @override
@@ -80,10 +85,10 @@ class _SignInScreenState extends State<SignInScreen> {
                         TextFormField(
                           keyboardType: TextInputType.emailAddress,
                           controller: userNameController,
-                          decoration: InputDecoration(labelText: "Email"),
+                          decoration: InputDecoration(labelText: "Username"),
                           validator: (value) {
                             if (value.isEmpty) {
-                              return 'Please enter some email address';
+                              return 'Please enter some username';
                             }
                             return null;
                           },

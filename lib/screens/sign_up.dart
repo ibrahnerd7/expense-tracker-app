@@ -23,7 +23,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   bool isSubmitting = false;
 
   final userNameController = TextEditingController();
-  final pictureController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
@@ -55,7 +54,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   void dispose() {
     userNameController.dispose();
-    pictureController.dispose();
     emailController.dispose();
     passwordController.dispose();
     super.dispose();
@@ -89,6 +87,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
       return User.fromJson(jsonDecode(response.body));
     } else {
       Get.snackbar('Error', "Failed to register user");
+      setState(() {
+        isSubmitting=false;
+      });
       throw Exception('Failed to authenticate');
     }
   }
