@@ -2,8 +2,10 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:expense_app/models/Expense.dart';
+import 'package:expense_app/screens/add_expense.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:get/get.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class Expenses extends StatefulWidget {
@@ -33,8 +35,8 @@ class _ExpensesState extends State<Expenses> {
       print(values);
       if (values.length > 0) {
         for (int i = 0; i < values.length; i++) {
-          if(values[i]!=null){
-            Map<String,dynamic> map=values[i];
+          if (values[i] != null) {
+            Map<String, dynamic> map = values[i];
             futureExpenses.add(Expense.fromJson(map));
             debugPrint('Id-------${map['id']}');
           }
@@ -65,6 +67,8 @@ class _ExpensesState extends State<Expenses> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: Container(),
+        centerTitle: false,
         title: Text('Expenses'),
       ),
       body: Container(
@@ -74,16 +78,20 @@ class _ExpensesState extends State<Expenses> {
             if (snapshot.hasData) {
               return ListView.builder(
                 itemCount: snapshot.data.length,
-                  itemBuilder:(context,index){
-                  Expense expense=snapshot.data[index];
+                itemBuilder: (context, index) {
+                  Expense expense = snapshot.data[index];
                   return ListTile(
-                    leading: CircleAvatar(child: Text(index.toString()),),
+                    leading: CircleAvatar(
+                      child: Text(index.toString()),
+                    ),
                     title: Text(expense.title),
                     subtitle: Text("Kshs ${expense.amount}"),
-                    trailing: IconButton(icon: Icon(Icons.delete),onPressed: ()=>print('delete'),),
+                    trailing: IconButton(
+                      icon: Icon(Icons.delete),
+                      onPressed: () => print('delete'),
+                    ),
                   );
-                  },
-
+                },
               );
             } else if (snapshot.hasError) {
               return Text("${snapshot.error}");
@@ -93,7 +101,7 @@ class _ExpensesState extends State<Expenses> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => print("Go to add expense"),
+        onPressed: () => Get.to(AddExpense()),
         child: Icon(Icons.add),
       ),
     );

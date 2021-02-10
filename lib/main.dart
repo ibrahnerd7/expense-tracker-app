@@ -1,3 +1,4 @@
+import 'package:expense_app/screens/add_expense.dart';
 import 'package:expense_app/screens/expenses.dart';
 import 'package:expense_app/screens/sign_in.dart';
 import 'package:expense_app/screens/sign_up.dart';
@@ -17,11 +18,11 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: 'Sign In',
       routes: {
-        'Sign In':(context)=>SignInScreen(),
-        'Sign Up':(context)=>SignUpScreen(),
-        'Expenses':(context)=>Expenses()
+        'Sign In': (context) => SignInScreen(),
+        'Sign Up': (context) => SignUpScreen(),
+        'Expenses': (context) => Expenses(),
+        'Add Expense': (context) => AddExpense()
       },
     );
   }
 }
-
