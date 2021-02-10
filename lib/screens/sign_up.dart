@@ -1,8 +1,14 @@
 import 'dart:convert';
 
 import 'package:expense_app/models/User.dart';
+import 'package:expense_app/screens/sign_in.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:path/path.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
+import 'package:get/get.dart';
 
 class SignUpScreen extends StatefulWidget {
   @override
@@ -11,10 +17,40 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
+
+  File _image;
+  final picker = ImagePicker();
+  bool isSubmitting = false;
+
   final userNameController = TextEditingController();
   final pictureController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+
+  Future getImage() async {
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+    setState(() {
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+      } else {
+        print('No image selected');
+      }
+    });
+  }
+
+  Future<String> uploadImageToFirebase(BuildContext context) async {
+    String userImageUrl = "";
+    String fileName = basename(_image.path);
+    StorageReference firebaseStorageRef =
+        FirebaseStorage.instance.ref().child('uploads/$fileName');
+    StorageUploadTask uploadTask = firebaseStorageRef.putFile(_image);
+    StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
+    var imageUrl = taskSnapshot.ref.getDownloadURL().then(
+          (value) => userImageUrl = value,
+        );
+    var url = await imageUrl;
+    return url;
+  }
 
   @override
   void dispose() {
@@ -28,6 +64,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
   void collectUserInput(
       String userName, String email, String picture, String password) async {
     User user = await signInUser(userName, email, picture, password);
+    if (user != null) {
+      Get.to(SignInScreen());
+    }
   }
 
   Future<User> signInUser(
@@ -45,8 +84,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
       }),
     );
     if (response.statusCode == 200) {
+      Get.snackbar('Success', "User registered successfully");
+
       return User.fromJson(jsonDecode(response.body));
     } else {
+      Get.snackbar('Error', "Failed to register user");
       throw Exception('Failed to authenticate');
     }
   }
@@ -78,15 +120,33 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             return null;
                           },
                         ),
-                        TextFormField(
-                          controller: pictureController,
-                          decoration: InputDecoration(labelText: "Picture"),
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return 'Please enter some picture';
-                            }
-                            return null;
-                          },
+                        Container(
+                          margin: EdgeInsets.symmetric(vertical: 16.0),
+                          child: Text(
+                            'Photo',
+                            style:
+                                TextStyle(fontSize: 17, color: Colors.black45),
+                          ),
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0))),
+                          child: _image == null
+                              ? Text('Select an image')
+                              : Image.file(
+                                  _image,
+                                ),
+                        ),
+                        OutlineButton(
+                          child: Text(
+                            "Upload image",
+                            style: TextStyle(fontSize: 20.0),
+                          ),
+                          highlightedBorderColor: Colors.teal,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15)),
+                          onPressed: getImage,
                         ),
                         TextFormField(
                           keyboardType: TextInputType.emailAddress,
@@ -110,29 +170,38 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             return null;
                           },
                         ),
-                        Container(
-                          width: double.infinity,
-                          margin: EdgeInsets.only(top: 32),
-                          child: Expanded(
-                            child: FlatButton(
-                              child: Text(
-                                'Create Account',
-                                style: TextStyle(fontSize: 22.0),
+                        isSubmitting
+                            ? CircularProgressIndicator()
+                            : Container(
+                                width: double.infinity,
+                                margin: EdgeInsets.only(top: 32),
+                                child: Expanded(
+                                  child: FlatButton(
+                                    child: Text(
+                                      'Create Account',
+                                      style: TextStyle(fontSize: 22.0),
+                                    ),
+                                    color: Colors.blueAccent,
+                                    textColor: Colors.white,
+                                    onPressed: () async {
+                                      setState(() {
+                                        isSubmitting = true;
+                                      });
+
+                                      if (_formKey.currentState.validate()) {
+                                        String pictureUrl =
+                                            await uploadImageToFirebase(
+                                                context);
+                                        collectUserInput(
+                                            userNameController.text,
+                                            emailController.text,
+                                            pictureUrl,
+                                            passwordController.text);
+                                      }
+                                    },
+                                  ),
+                                ),
                               ),
-                              color: Colors.blueAccent,
-                              textColor: Colors.white,
-                              onPressed: () {
-                                if (_formKey.currentState.validate()) {
-                                  collectUserInput(
-                                      userNameController.text,
-                                      emailController.text,
-                                      pictureController.text,
-                                      passwordController.text);
-                                }
-                              },
-                            ),
-                          ),
-                        ),
                         Container(
                           width: double.infinity,
                           margin: EdgeInsets.only(top: 32),
