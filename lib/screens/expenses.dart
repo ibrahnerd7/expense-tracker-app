@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:expense_app/models/Expense.dart';
 import 'package:expense_app/screens/add_expense.dart';
+import 'package:expense_app/screens/expense_details.dart';
 import 'package:expense_app/screens/sign_in.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -139,18 +140,22 @@ class _ExpensesState extends State<Expenses> {
                     itemCount: snapshot.data.length,
                     itemBuilder: (context, index) {
                       Expense expense = snapshot.data[index];
-                      return ListTile(
-                        leading: CircleAvatar(
-                          radius: 30.0,
-                          backgroundImage: NetworkImage(expense.imageUrl),
-                          backgroundColor: Colors.transparent,
-                        ),
-                        title: Text(expense.title),
-                        subtitle: Text("Kshs ${expense.amount}"),
-                        trailing: IconButton(
-                          icon: Icon(Icons.delete),
-                          onPressed: () =>
-                              deleteExpense(int.parse(expense.expenseId)),
+                      return GestureDetector(
+                        onTap: () =>
+                            Get.to(ExpenseDetails(), arguments: expense),
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            radius: 30.0,
+                            backgroundImage: NetworkImage(expense.imageUrl),
+                            backgroundColor: Colors.transparent,
+                          ),
+                          title: Text(expense.title),
+                          subtitle: Text("Kshs ${expense.amount}"),
+                          trailing: IconButton(
+                            icon: Icon(Icons.delete),
+                            onPressed: () =>
+                                deleteExpense(int.parse(expense.expenseId)),
+                          ),
                         ),
                       );
                     }),

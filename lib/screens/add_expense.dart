@@ -32,7 +32,7 @@ class _AddExpenseState extends State<AddExpense> {
   final amountController = TextEditingController();
 
   Future getImage() async {
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+    final pickedFile = await picker.getImage(source: ImageSource.camera);
     setState(() {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
