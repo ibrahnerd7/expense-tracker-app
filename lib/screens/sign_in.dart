@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:expense_app/models/User.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class SignInScreen extends StatefulWidget {
   @override
@@ -11,6 +12,7 @@ class SignInScreen extends StatefulWidget {
 
 class _SignInScreenState extends State<SignInScreen> {
   final _formKey = GlobalKey<FormState>();
+  final _storage = FlutterSecureStorage();
   final userNameController = TextEditingController();
   final passwordController = TextEditingController();
 
@@ -23,18 +25,27 @@ class _SignInScreenState extends State<SignInScreen> {
 
   void collectUserInput(String userName, String password) async {
     User user = await signInUser(userName, password);
-    //save token to some local storage, to be used in subsequent requests;
+    if (user.token != null) {
+      saveAuthToken(user.token);
 
+    }
+  }
+
+  void saveAuthToken(String authToken) async {
+    final String key = "authToken";
+    final String value = authToken;
+
+    await _storage.write(key: key, value: value);
   }
 
   Future<User> signInUser(String userName, String password) async {
     final response = await http.post(
-        'https://guarded-basin-78853.herokuapp.com/users/authenticate',
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(
-            <String, String>{'userName': userName, 'password': password}),
+      'https://guarded-basin-78853.herokuapp.com/users/authenticate',
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(
+          <String, String>{'userName': userName, 'password': password}),
     );
     if (response.statusCode == 200) {
       return User.fromJson(jsonDecode(response.body));
