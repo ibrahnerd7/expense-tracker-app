@@ -57,6 +57,25 @@ class _ExpensesState extends State<Expenses> {
     return value;
   }
 
+  void deleteExpense(int id) async {
+    final String authToken = await fetchAuthToken();
+
+    final response = await http.delete(
+      'https://guarded-basin-78853.herokuapp.com/expenses/$id',
+      headers: <String, String>{
+        HttpHeaders.authorizationHeader: 'Bearer $authToken',
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      print('Delete successful');
+    } else {
+      throw Exception('Failed to add expense');
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -88,7 +107,8 @@ class _ExpensesState extends State<Expenses> {
                     subtitle: Text("Kshs ${expense.amount}"),
                     trailing: IconButton(
                       icon: Icon(Icons.delete),
-                      onPressed: () => print('delete'),
+                      onPressed: () =>
+                          deleteExpense(int.parse(expense.expenseId)),
                     ),
                   );
                 },

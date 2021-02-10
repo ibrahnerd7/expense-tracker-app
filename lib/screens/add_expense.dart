@@ -2,9 +2,11 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:expense_app/models/Expense.dart';
+import 'package:expense_app/screens/expenses.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:get/get.dart';
 
 class AddExpense extends StatefulWidget {
   @override
@@ -34,6 +36,9 @@ class _AddExpenseState extends State<AddExpense> {
   void collectUserInput(
       String title, String description, String amount, String imageUrl) async {
     Expense expense = await addExpense(title, description, amount, imageUrl);
+    if(expense !=null){
+      Get.to(Expenses());
+    }
   }
 
   Future<String> fetchAuthToken() async {
