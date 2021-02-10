@@ -94,7 +94,7 @@ class _ExpensesState extends State<Expenses> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Container(),
+        automaticallyImplyLeading: false,
         centerTitle: false,
         title: Text('Expenses'),
       ),
