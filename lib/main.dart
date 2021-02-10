@@ -1,3 +1,4 @@
+import 'package:expense_app/screens/expenses.dart';
 import 'package:expense_app/screens/sign_in.dart';
 import 'package:expense_app/screens/sign_up.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +17,8 @@ class MyApp extends StatelessWidget {
       initialRoute: 'Sign In',
       routes: {
         'Sign In':(context)=>SignInScreen(),
-        'Sign Up':(context)=>SignUpScreen()
+        'Sign Up':(context)=>SignUpScreen(),
+        'Expenses':(context)=>Expenses()
       },
     );
   }
