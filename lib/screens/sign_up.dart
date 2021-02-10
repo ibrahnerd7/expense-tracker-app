@@ -10,7 +10,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 
-
 class SignUpScreen extends StatefulWidget {
   @override
   _SignUpScreenState createState() => _SignUpScreenState();
@@ -89,7 +88,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     } else {
       Get.snackbar('Error', "Failed to register user");
       setState(() {
-        isSubmitting=false;
+        isSubmitting = false;
       });
       throw Exception('Failed to authenticate');
     }
@@ -98,133 +97,137 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Container(
-          margin: const EdgeInsets.only(top: 24, bottom: 16),
-          child: Padding(
-            padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Form(
-                    key: _formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        TextFormField(
-                          keyboardType: TextInputType.name,
-                          controller: userNameController,
-                          decoration: InputDecoration(labelText: "Username"),
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return 'Please enter some username';
-                            }
-                            return null;
-                          },
-                        ),
-                        Container(
-                          margin: EdgeInsets.symmetric(vertical: 16.0),
-                          child: Text(
-                            'Photo',
-                            style:
-                                TextStyle(fontSize: 17, color: Colors.black45),
-                          ),
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0))),
-                          child: _image == null
-                              ? Text('Select an image')
-                              : Image.file(
-                                  _image,
-                                ),
-                        ),
-                        OutlineButton(
-                          child: Text(
-                            "Upload image",
-                            style: TextStyle(fontSize: 20.0),
-                          ),
-                          highlightedBorderColor: Colors.teal,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15)),
-                          onPressed: getImage,
-                        ),
-                        TextFormField(
-                          keyboardType: TextInputType.emailAddress,
-                          controller: emailController,
-                          decoration: InputDecoration(labelText: "Email"),
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return 'Please enter some email address';
-                            }
-                            return null;
-                          },
-                        ),
-                        TextFormField(
-                          controller: passwordController,
-                          keyboardType: TextInputType.visiblePassword,
-                          decoration: InputDecoration(labelText: "Password"),
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return 'Please enter some password';
-                            }
-                            return null;
-                          },
-                        ),
-                        isSubmitting
-                            ? CircularProgressIndicator()
-                            : Container(
-                                width: double.infinity,
-                                margin: EdgeInsets.only(top: 32),
-                                child: Expanded(
-                                  child: FlatButton(
-                                    child: Text(
-                                      'Create Account',
-                                      style: TextStyle(fontSize: 22.0),
-                                    ),
-                                    color: Colors.blueAccent,
-                                    textColor: Colors.white,
-                                    onPressed: () async {
-                                      setState(() {
-                                        isSubmitting = true;
-                                      });
-
-                                      if (_formKey.currentState.validate()) {
-                                        String pictureUrl =
-                                            await uploadImageToFirebase(
-                                                context);
-                                        collectUserInput(
-                                            userNameController.text,
-                                            emailController.text,
-                                            pictureUrl,
-                                            passwordController.text);
-                                      }
-                                    },
-                                  ),
-                                ),
-                              ),
-                        Container(
-                          width: double.infinity,
-                          margin: EdgeInsets.only(top: 32),
-                          child: Expanded(
-                            child: TextButton(
-                              child: Text(
-                                "Already have an account? Sign In here",
-                                style: TextStyle(fontSize: 17.0),
-                              ),
-                              onPressed: () {
-                                Navigator.pushNamed(context, "Sign In");
-                              },
-                            ),
-                          ),
-                        ),
-                      ],
-                    ))
-              ],
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            margin: EdgeInsets.only(top: 42, right: 16, left: 16),
+            child: Text(
+              "Sign Up",
+              textAlign: TextAlign.start,
+              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
             ),
           ),
-        ),
+          Container(
+            margin: EdgeInsets.only(left: 16, right: 16),
+            child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextFormField(
+                      keyboardType: TextInputType.name,
+                      controller: userNameController,
+                      decoration: InputDecoration(labelText: "Username"),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Please enter some username';
+                        }
+                        return null;
+                      },
+                    ),
+                    Container(
+                      margin: EdgeInsets.symmetric(vertical: 16.0),
+                      child: Text(
+                        'Profile picture',
+                        style: TextStyle(fontSize: 17, color: Colors.black45),
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(10.0))),
+                      child: _image == null
+                          ? Text('Select an image')
+                          : Image.file(
+                              _image,
+                              width: 200,
+                              height: 100,
+                            ),
+                    ),
+                    OutlineButton(
+                      child: Text(
+                        "Upload image",
+                        style: TextStyle(fontSize: 20.0),
+                      ),
+                      highlightedBorderColor: Colors.teal,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15)),
+                      onPressed: getImage,
+                    ),
+                    TextFormField(
+                      keyboardType: TextInputType.emailAddress,
+                      controller: emailController,
+                      decoration: InputDecoration(labelText: "Email"),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Please enter some email address';
+                        }
+                        return null;
+                      },
+                    ),
+                    TextFormField(
+                      controller: passwordController,
+                      keyboardType: TextInputType.visiblePassword,
+                      decoration: InputDecoration(labelText: "Password"),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Please enter some password';
+                        }
+                        return null;
+                      },
+                    ),
+                    isSubmitting
+                        ? CircularProgressIndicator()
+                        : Container(
+                            width: double.infinity,
+                            margin: EdgeInsets.only(top: 32),
+                            child: Expanded(
+                              child: FlatButton(
+                                child: Text(
+                                  'Create Account',
+                                  style: TextStyle(fontSize: 22.0),
+                                ),
+                                color: Colors.blueAccent,
+                                textColor: Colors.white,
+                                onPressed: () async {
+                                  setState(() {
+                                    isSubmitting = true;
+                                  });
+
+                                  if (_formKey.currentState.validate()) {
+                                    String pictureUrl =
+                                        await uploadImageToFirebase(context);
+                                    collectUserInput(
+                                        userNameController.text,
+                                        emailController.text,
+                                        pictureUrl,
+                                        passwordController.text);
+                                  }
+                                },
+                              ),
+                            ),
+                          ),
+                    Container(
+                      width: double.infinity,
+                      margin: EdgeInsets.only(top: 32),
+                      child: Expanded(
+                        child: TextButton(
+                          child: Text(
+                            "Already have an account? Sign In here",
+                            style: TextStyle(fontSize: 17.0),
+                          ),
+                          onPressed: () {
+                            Navigator.pushNamed(context, "Sign In");
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                )),
+          )
+        ],
       ),
     );
   }

@@ -45,7 +45,6 @@ class _SignInScreenState extends State<SignInScreen> {
     await _storage.write(key: key, value: value);
   }
 
-
   Future<User> signInUser(String userName, String password) async {
     final response = await http.post(
       'https://guarded-basin-78853.herokuapp.com/users/authenticate',
@@ -69,88 +68,92 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Container(
-          margin: const EdgeInsets.only(top: 24, bottom: 16),
-          child: Padding(
-            padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Form(
-                    key: _formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        TextFormField(
-                          keyboardType: TextInputType.emailAddress,
-                          controller: userNameController,
-                          decoration: InputDecoration(labelText: "Username"),
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return 'Please enter some username';
-                            }
-                            return null;
-                          },
-                        ),
-                        TextFormField(
-                          controller: passwordController,
-                          keyboardType: TextInputType.visiblePassword,
-                          decoration: InputDecoration(labelText: "Password"),
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return 'Please enter some password';
-                            }
-                            return null;
-                          },
-                        ),
-                        isSubmitting
-                            ? CircularProgressIndicator()
-                            : Container(
-                                width: double.infinity,
-                                margin: EdgeInsets.only(top: 32),
-                                child: Expanded(
-                                  child: FlatButton(
-                                    child: Text(
-                                      'Sign In',
-                                      style: TextStyle(fontSize: 22.0),
-                                    ),
-                                    color: Colors.blueAccent,
-                                    textColor: Colors.white,
-                                    onPressed: () {
-                                      if (_formKey.currentState.validate()) {
-                                        setState(() {
-                                          isSubmitting = true;
-                                        });
-                                        collectUserInput(
-                                            userNameController.text,
-                                            passwordController.text);
-                                      }
-                                    },
-                                  ),
-                                ),
-                              ),
-                        Container(
-                          width: double.infinity,
-                          margin: EdgeInsets.only(top: 32),
-                          child: Expanded(
-                            child: TextButton(
-                              child: Text(
-                                "Don't have an account? Create here",
-                                style: TextStyle(fontSize: 17.0),
-                              ),
-                              onPressed: () {
-                                Navigator.pushNamed(context, "Sign Up");
-                              },
-                            ),
-                          ),
-                        ),
-                      ],
-                    ))
-              ],
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            margin: EdgeInsets.only(left: 16, top: 42, right: 16),
+            child: Text(
+              "Sign In",
+              textAlign: TextAlign.start,
+              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
             ),
           ),
-        ),
+          Container(
+            margin: EdgeInsets.only(left: 16, right: 16),
+            child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    TextFormField(
+                      keyboardType: TextInputType.emailAddress,
+                      controller: userNameController,
+                      decoration: InputDecoration(labelText: "Username"),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Please enter some username';
+                        }
+                        return null;
+                      },
+                    ),
+                    TextFormField(
+                      controller: passwordController,
+                      keyboardType: TextInputType.visiblePassword,
+                      decoration: InputDecoration(labelText: "Password"),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Please enter some password';
+                        }
+                        return null;
+                      },
+                    ),
+                    isSubmitting
+                        ? CircularProgressIndicator()
+                        : Container(
+                      width: double.infinity,
+                      margin: EdgeInsets.only(top: 32),
+                      child: Expanded(
+                        child: FlatButton(
+                          child: Text(
+                            'Sign In',
+                            style: TextStyle(fontSize: 22.0),
+                          ),
+                          color: Colors.blueAccent,
+                          textColor: Colors.white,
+                          onPressed: () {
+                            if (_formKey.currentState.validate()) {
+                              setState(() {
+                                isSubmitting = true;
+                              });
+                              collectUserInput(
+                                  userNameController.text,
+                                  passwordController.text);
+                            }
+                          },
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: double.infinity,
+                      margin: EdgeInsets.only(top: 32),
+                      child: Expanded(
+                        child: TextButton(
+                          child: Text(
+                            "Don't have an account? Create here",
+                            style: TextStyle(fontSize: 17.0),
+                          ),
+                          onPressed: () {
+                            Navigator.pushNamed(context, "Sign Up");
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                )),
+          )
+        ],
       ),
     );
   }

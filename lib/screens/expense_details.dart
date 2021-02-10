@@ -33,6 +33,7 @@ class _ExpenseDetailsState extends State<ExpenseDetails> {
             ];
           },
           body: Container(
+            margin: EdgeInsets.only(top: 32, left: 16),
             child: Text(expense.description),
           )),
     );
