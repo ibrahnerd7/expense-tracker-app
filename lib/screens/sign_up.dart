@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class SignUpScreen extends StatefulWidget {
   @override
@@ -7,8 +10,8 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
-  final userNameController=TextEditingController();
-  final passwordController=TextEditingController();
+  final userNameController = TextEditingController();
+  final passwordController = TextEditingController();
 
   @override
   void dispose() {
@@ -22,6 +25,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
     print(password);
   }
 
+  Future<http.Response> signInUser(String userName, String password) {
+    return http.post(
+        'https://guarded-basin-78853.herokuapp.com/users/authenticate',
+      body: jsonEncode(<String,String>{
+        'userName':userName,
+        'password':password
+      })
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,7 +42,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         child: Container(
           margin: const EdgeInsets.only(top: 24, bottom: 16),
           child: Padding(
-            padding:const EdgeInsets.only(left: 16.0, right: 16.0),
+            padding: const EdgeInsets.only(left: 16.0, right: 16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -50,7 +63,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           },
                         ),
                         TextFormField(
-                          controller:passwordController ,
+                          controller: passwordController,
                           keyboardType: TextInputType.visiblePassword,
                           decoration: InputDecoration(labelText: "Password"),
                           validator: (value) {
@@ -74,7 +87,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               textColor: Colors.white,
                               onPressed: () {
                                 if (_formKey.currentState.validate()) {
-collectUserInput(userNameController.text,passwordController.text);
+                                  collectUserInput(userNameController.text,
+                                      passwordController.text);
                                 }
                               },
                             ),
