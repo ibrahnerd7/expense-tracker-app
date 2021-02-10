@@ -21,7 +21,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
     super.dispose();
   }
 
-
+  void collectUserInput(
+      String userName, String email, String picture, String password) async {
+    print(userName);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +98,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               textColor: Colors.white,
                               onPressed: () {
                                 if (_formKey.currentState.validate()) {
-
+                                  collectUserInput(
+                                      userNameController.text,
+                                      emailController.text,
+                                      pictureController.text,
+                                      passwordController.text);
                                 }
                               },
                             ),
@@ -111,7 +118,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 style: TextStyle(fontSize: 17.0),
                               ),
                               onPressed: () {
-                               Navigator.pushNamed(context, "Sign In");
+                                Navigator.pushNamed(context, "Sign In");
                               },
                             ),
                           ),
