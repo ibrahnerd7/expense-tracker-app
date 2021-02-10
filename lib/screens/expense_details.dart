@@ -23,10 +23,12 @@ class _ExpenseDetailsState extends State<ExpenseDetails> {
                     title: Text(
                       expense.title,
                     ),
-                    background: Image.network(
-                      expense.imageUrl,
-                      fit: BoxFit.cover,
-                    )),
+                    background: Hero(
+                        tag: "${expense.description}${expense.expenseId}",
+                        child: Image.network(
+                          expense.imageUrl,
+                          fit: BoxFit.cover,
+                        ))),
               ),
             ];
           },

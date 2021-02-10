@@ -144,10 +144,13 @@ class _ExpensesState extends State<Expenses> {
                         onTap: () =>
                             Get.to(ExpenseDetails(), arguments: expense),
                         child: ListTile(
-                          leading: CircleAvatar(
-                            radius: 30.0,
-                            backgroundImage: NetworkImage(expense.imageUrl),
-                            backgroundColor: Colors.transparent,
+                          leading: Hero(
+                            tag: "${expense.description}${expense.expenseId}",
+                            child: CircleAvatar(
+                              radius: 30.0,
+                              backgroundImage: NetworkImage(expense.imageUrl),
+                              backgroundColor: Colors.transparent,
+                            ),
                           ),
                           title: Text(expense.title),
                           subtitle: Text("Kshs ${expense.amount}"),
