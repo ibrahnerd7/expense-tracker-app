@@ -11,6 +11,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final passwordController=TextEditingController();
 
   @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
