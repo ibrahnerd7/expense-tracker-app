@@ -45,6 +45,7 @@ class _SignInScreenState extends State<SignInScreen> {
     await _storage.write(key: key, value: value);
   }
 
+
   Future<User> signInUser(String userName, String password) async {
     final response = await http.post(
       'https://guarded-basin-78853.herokuapp.com/users/authenticate',
@@ -59,11 +60,10 @@ class _SignInScreenState extends State<SignInScreen> {
     } else {
       Get.snackbar("Error", "Failed to authenticate user");
       setState(() {
-        isSubmitting=false;
+        isSubmitting = false;
       });
       throw Exception('Failed to authenticate');
     }
-
   }
 
   @override

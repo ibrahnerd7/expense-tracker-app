@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:expense_app/models/Expense.dart';
 import 'package:expense_app/screens/add_expense.dart';
 import 'package:expense_app/screens/expense_details.dart';
-import 'package:expense_app/screens/sign_in.dart';
+import 'package:expense_app/screens/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
@@ -95,6 +95,7 @@ class _ExpensesState extends State<Expenses> {
   void handleClick(String value) {
     switch (value) {
       case 'Profile':
+        Get.to(ProfileScreen() );
         break;
       case 'Sign out':
         signOut();
