@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:expense_app/models/User.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -20,19 +21,25 @@ class _SignUpScreenState extends State<SignUpScreen> {
     super.dispose();
   }
 
-  void collectUserInput(String userName, String password) {
-    print(userName);
-    print(password);
+  void collectUserInput(String userName, String password) async {
+    User user = await signInUser(userName, password);
+    print(user.token);
   }
 
-  Future<http.Response> signInUser(String userName, String password) {
-    return http.post(
+  Future<User> signInUser(String userName, String password) async {
+    final response = await http.post(
         'https://guarded-basin-78853.herokuapp.com/users/authenticate',
-      body: jsonEncode(<String,String>{
-        'userName':userName,
-        'password':password
-      })
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(
+            <String, String>{'userName': userName, 'password': password}),
     );
+    if (response.statusCode == 200) {
+      return User.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Failed to authenticate');
+    }
   }
 
   @override
@@ -73,7 +80,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             return null;
                           },
                         ),
-
                         Container(
                           width: double.infinity,
                           margin: EdgeInsets.only(top: 32),
@@ -100,9 +106,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             ),
           ),
         ),
-      )
-      ,
+      ),
     );
   }
-
 }
