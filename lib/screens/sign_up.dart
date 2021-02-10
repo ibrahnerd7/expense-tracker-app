@@ -28,7 +28,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   void collectUserInput(
       String userName, String email, String picture, String password) async {
     User user = await signInUser(userName, email, picture, password);
-    print(user.userId);
   }
 
   Future<User> signInUser(
