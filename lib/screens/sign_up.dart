@@ -100,6 +100,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             ),
                           ),
                         ),
+                        Container(
+                          width: double.infinity,
+                          margin: EdgeInsets.only(top: 32),
+                          child: Expanded(
+                            child: TextButton(
+                              child: Text(
+                                "Don't have an account? Create here",
+                                style: TextStyle(fontSize: 17.0),
+                              ),
+                              onPressed: () {
+                                print('Go to create account');
+                              },
+                            ),
+                          ),
+                        ),
                       ],
                     ))
               ],
