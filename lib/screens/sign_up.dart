@@ -1,46 +1,27 @@
-import 'dart:convert';
-
-import 'package:expense_app/models/User.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 
-class SignInScreen extends StatefulWidget {
+class SignUpScreen extends StatefulWidget {
   @override
-  _SignInScreenState createState() => _SignInScreenState();
+  _SignUpScreenState createState() => _SignUpScreenState();
 }
 
-class _SignInScreenState extends State<SignInScreen> {
+class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
   final userNameController = TextEditingController();
+  final pictureController = TextEditingController();
+  final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
   @override
   void dispose() {
     userNameController.dispose();
+    pictureController.dispose();
+    emailController.dispose();
     passwordController.dispose();
     super.dispose();
   }
 
-  void collectUserInput(String userName, String password) async {
-    User user = await signInUser(userName, password);
-    print(user.token);
-  }
 
-  Future<User> signInUser(String userName, String password) async {
-    final response = await http.post(
-        'https://guarded-basin-78853.herokuapp.com/users/authenticate',
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(
-            <String, String>{'userName': userName, 'password': password}),
-    );
-    if (response.statusCode == 200) {
-      return User.fromJson(jsonDecode(response.body));
-    } else {
-      throw Exception('Failed to authenticate');
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,8 +40,29 @@ class _SignInScreenState extends State<SignInScreen> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         TextFormField(
-                          keyboardType: TextInputType.emailAddress,
+                          keyboardType: TextInputType.name,
                           controller: userNameController,
+                          decoration: InputDecoration(labelText: "Username"),
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Please enter some username';
+                            }
+                            return null;
+                          },
+                        ),
+                        TextFormField(
+                          controller: pictureController,
+                          decoration: InputDecoration(labelText: "Picture"),
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Please enter some picture';
+                            }
+                            return null;
+                          },
+                        ),
+                        TextFormField(
+                          keyboardType: TextInputType.emailAddress,
+                          controller: emailController,
                           decoration: InputDecoration(labelText: "Email"),
                           validator: (value) {
                             if (value.isEmpty) {
@@ -86,15 +88,14 @@ class _SignInScreenState extends State<SignInScreen> {
                           child: Expanded(
                             child: FlatButton(
                               child: Text(
-                                'Sign In',
+                                'Create Account',
                                 style: TextStyle(fontSize: 22.0),
                               ),
                               color: Colors.blueAccent,
                               textColor: Colors.white,
                               onPressed: () {
                                 if (_formKey.currentState.validate()) {
-                                  collectUserInput(userNameController.text,
-                                      passwordController.text);
+
                                 }
                               },
                             ),
@@ -106,11 +107,11 @@ class _SignInScreenState extends State<SignInScreen> {
                           child: Expanded(
                             child: TextButton(
                               child: Text(
-                                "Don't have an account? Create here",
+                                "Already have an account? Sign In here",
                                 style: TextStyle(fontSize: 17.0),
                               ),
                               onPressed: () {
-                                Navigator.pushNamed(context, "Sign Up");
+                               Navigator.pushNamed(context, "Sign In");
                               },
                             ),
                           ),
