@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:expense_app/models/Expense.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class Expenses extends StatefulWidget {
   @override
@@ -10,14 +12,17 @@ class Expenses extends StatefulWidget {
 }
 
 class _ExpensesState extends State<Expenses> {
+  final _storage = FlutterSecureStorage();
   Future<List<Expense>> futureExpenses;
 
   Future<List<Expense>> fetchExpenses() async {
+    final String authToken = await fetchAuthToken();
     List<Expense> futureExpenses = [];
 
     final response = await http.get(
       'https://guarded-basin-78853.herokuapp.com/expenses',
       headers: <String, String>{
+        HttpHeaders.authorizationHeader: 'Bearer $authToken',
         'Content-Type': 'application/json; charset=UTF-8',
       },
     );
@@ -31,6 +36,14 @@ class _ExpensesState extends State<Expenses> {
     } else {
       throw new Exception('Failed to fetch expenses');
     }
+  }
+
+  Future<String> fetchAuthToken() async {
+    final String key = "authToken";
+    String value;
+
+    value = await _storage.read(key: key);
+    return value;
   }
 
   @override
