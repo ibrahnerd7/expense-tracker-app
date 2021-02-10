@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:expense_app/models/Expense.dart';
 import 'package:expense_app/screens/add_expense.dart';
+import 'package:expense_app/screens/sign_in.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
@@ -90,6 +91,21 @@ class _ExpensesState extends State<Expenses> {
     });
   }
 
+  void handleClick(String value) {
+    switch (value) {
+      case 'Profile':
+        break;
+      case 'Sign out':
+        signOut();
+        break;
+    }
+  }
+
+  void signOut() async {
+    await _storage.delete(key: 'authToken');
+    Get.until((route) => Get.currentRoute == "Sign In");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -97,6 +113,20 @@ class _ExpensesState extends State<Expenses> {
         automaticallyImplyLeading: false,
         centerTitle: false,
         title: Text('Expenses'),
+        actions: <Widget>[
+          PopupMenuButton<String>(
+            icon: Icon(Icons.more_vert),
+            onSelected: handleClick,
+            itemBuilder: (BuildContext context) {
+              return {'Profile', 'Sign out'}.map((String choice) {
+                return PopupMenuItem<String>(
+                  value: choice,
+                  child: Text(choice),
+                );
+              }).toList();
+            },
+          ),
+        ],
       ),
       body: Container(
         child: FutureBuilder<List<Expense>>(
