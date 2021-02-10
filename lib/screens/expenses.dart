@@ -71,6 +71,7 @@ class _ExpensesState extends State<Expenses> {
     print(response.statusCode);
     if (response.statusCode == 200) {
       print('Delete successful');
+      pullToRefresh();
     } else {
       throw Exception('Failed to add expense');
     }
@@ -80,6 +81,13 @@ class _ExpensesState extends State<Expenses> {
   void initState() {
     super.initState();
     futureExpenses = fetchExpenses();
+  }
+
+  Future<void> pullToRefresh() async {
+    Future<List<Expense>> expenses = fetchExpenses();
+    setState(() {
+      futureExpenses = expenses;
+    });
   }
 
   @override
@@ -95,23 +103,25 @@ class _ExpensesState extends State<Expenses> {
           future: futureExpenses,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              return ListView.builder(
-                itemCount: snapshot.data.length,
-                itemBuilder: (context, index) {
-                  Expense expense = snapshot.data[index];
-                  return ListTile(
-                    leading: CircleAvatar(
-                      child: Text(index.toString()),
-                    ),
-                    title: Text(expense.title),
-                    subtitle: Text("Kshs ${expense.amount}"),
-                    trailing: IconButton(
-                      icon: Icon(Icons.delete),
-                      onPressed: () =>
-                          deleteExpense(int.parse(expense.expenseId)),
-                    ),
-                  );
-                },
+              return RefreshIndicator(
+                onRefresh: pullToRefresh,
+                child: ListView.builder(
+                    itemCount: snapshot.data.length,
+                    itemBuilder: (context, index) {
+                      Expense expense = snapshot.data[index];
+                      return ListTile(
+                        leading: CircleAvatar(
+                          child: Text(index.toString()),
+                        ),
+                        title: Text(expense.title),
+                        subtitle: Text("Kshs ${expense.amount}"),
+                        trailing: IconButton(
+                          icon: Icon(Icons.delete),
+                          onPressed: () =>
+                              deleteExpense(int.parse(expense.expenseId)),
+                        ),
+                      );
+                    }),
               );
             } else if (snapshot.hasError) {
               return Text("${snapshot.error}");

@@ -16,6 +16,7 @@ class AddExpense extends StatefulWidget {
 class _AddExpenseState extends State<AddExpense> {
   final _storage = FlutterSecureStorage();
   final _formKey = GlobalKey<FormState>();
+  bool isSubmmiting = false;
 
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
@@ -36,9 +37,12 @@ class _AddExpenseState extends State<AddExpense> {
   void collectUserInput(
       String title, String description, String amount, String imageUrl) async {
     Expense expense = await addExpense(title, description, amount, imageUrl);
-    if(expense !=null){
+    if (expense != null) {
       Get.to(Expenses());
     }
+    setState(() {
+      isSubmmiting = false;
+    });
   }
 
   Future<String> fetchAuthToken() async {
@@ -66,7 +70,6 @@ class _AddExpenseState extends State<AddExpense> {
         "imageUrl": imageUrl
       }),
     );
-    print(response.statusCode);
     if (response.statusCode == 200) {
       return Expense.fromJson(jsonDecode(response.body));
     } else {
@@ -140,25 +143,30 @@ class _AddExpenseState extends State<AddExpense> {
                         Container(
                           width: double.infinity,
                           margin: EdgeInsets.only(top: 32),
-                          child: Expanded(
-                            child: FlatButton(
-                              child: Text(
-                                'Save',
-                                style: TextStyle(fontSize: 22.0),
-                              ),
-                              color: Colors.blueAccent,
-                              textColor: Colors.white,
-                              onPressed: () {
-                                if (_formKey.currentState.validate()) {
-                                  collectUserInput(
-                                      titleController.text,
-                                      descriptionController.text,
-                                      amountController.text,
-                                      imageUrlController.text);
-                                }
-                              },
-                            ),
-                          ),
+                          child: isSubmmiting
+                              ? LinearProgressIndicator()
+                              : Expanded(
+                                  child: FlatButton(
+                                    child: Text(
+                                      'Save',
+                                      style: TextStyle(fontSize: 22.0),
+                                    ),
+                                    color: Colors.blueAccent,
+                                    textColor: Colors.white,
+                                    onPressed: () {
+                                      if (_formKey.currentState.validate()) {
+                                        setState(() {
+                                          isSubmmiting = true;
+                                        });
+                                        collectUserInput(
+                                            titleController.text,
+                                            descriptionController.text,
+                                            amountController.text,
+                                            imageUrlController.text);
+                                      }
+                                    },
+                                  ),
+                                ),
                         ),
                       ],
                     ))
