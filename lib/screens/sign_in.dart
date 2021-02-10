@@ -6,7 +6,6 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 
-
 class SignInScreen extends StatefulWidget {
   @override
   _SignInScreenState createState() => _SignInScreenState();
@@ -15,7 +14,7 @@ class SignInScreen extends StatefulWidget {
 class _SignInScreenState extends State<SignInScreen> {
   final _formKey = GlobalKey<FormState>();
 
-
+  bool isSubmitting = false;
   final _storage = FlutterSecureStorage();
 
   final userNameController = TextEditingController();
@@ -34,6 +33,9 @@ class _SignInScreenState extends State<SignInScreen> {
       saveAuthToken(user.token);
       Get.to(Expenses());
     }
+    setState(() {
+      isSubmitting = false;
+    });
   }
 
   void saveAuthToken(String authToken) async {
@@ -97,26 +99,32 @@ class _SignInScreenState extends State<SignInScreen> {
                             return null;
                           },
                         ),
-                        Container(
-                          width: double.infinity,
-                          margin: EdgeInsets.only(top: 32),
-                          child: Expanded(
-                            child: FlatButton(
-                              child: Text(
-                                'Sign In',
-                                style: TextStyle(fontSize: 22.0),
+                        isSubmitting
+                            ? CircularProgressIndicator()
+                            : Container(
+                                width: double.infinity,
+                                margin: EdgeInsets.only(top: 32),
+                                child: Expanded(
+                                  child: FlatButton(
+                                    child: Text(
+                                      'Sign In',
+                                      style: TextStyle(fontSize: 22.0),
+                                    ),
+                                    color: Colors.blueAccent,
+                                    textColor: Colors.white,
+                                    onPressed: () {
+                                      if (_formKey.currentState.validate()) {
+                                        setState(() {
+                                          isSubmitting = true;
+                                        });
+                                        collectUserInput(
+                                            userNameController.text,
+                                            passwordController.text);
+                                      }
+                                    },
+                                  ),
+                                ),
                               ),
-                              color: Colors.blueAccent,
-                              textColor: Colors.white,
-                              onPressed: () {
-                                if (_formKey.currentState.validate()) {
-                                  collectUserInput(userNameController.text,
-                                      passwordController.text);
-                                }
-                              },
-                            ),
-                          ),
-                        ),
                         Container(
                           width: double.infinity,
                           margin: EdgeInsets.only(top: 32),
