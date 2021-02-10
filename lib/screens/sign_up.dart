@@ -7,14 +7,19 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
-  final emailController=TextEditingController();
+  final userNameController=TextEditingController();
   final passwordController=TextEditingController();
 
   @override
   void dispose() {
-    emailController.dispose();
+    userNameController.dispose();
     passwordController.dispose();
     super.dispose();
+  }
+
+  void collectUserInput(String userName, String password) {
+    print(userName);
+    print(password);
   }
 
   @override
@@ -35,7 +40,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       children: [
                         TextFormField(
                           keyboardType: TextInputType.emailAddress,
-                          controller: emailController,
+                          controller: userNameController,
                           decoration: InputDecoration(labelText: "Email"),
                           validator: (value) {
                             if (value.isEmpty) {
@@ -69,7 +74,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               textColor: Colors.white,
                               onPressed: () {
                                 if (_formKey.currentState.validate()) {
-
+collectUserInput(userNameController.text,passwordController.text);
                                 }
                               },
                             ),
@@ -85,4 +90,5 @@ class _SignUpScreenState extends State<SignUpScreen> {
       ,
     );
   }
+
 }
