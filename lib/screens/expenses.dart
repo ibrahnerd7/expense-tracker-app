@@ -67,12 +67,24 @@ class _ExpensesState extends State<Expenses> {
       appBar: AppBar(
         title: Text('Expenses'),
       ),
-      body: Center(
+      body: Container(
         child: FutureBuilder<List<Expense>>(
           future: futureExpenses,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              return Text(snapshot.data.length.toString());
+              return ListView.builder(
+                itemCount: snapshot.data.length,
+                  itemBuilder:(context,index){
+                  Expense expense=snapshot.data[index];
+                  return ListTile(
+                    leading: CircleAvatar(child: Text(index.toString()),),
+                    title: Text(expense.title),
+                    subtitle: Text("Kshs ${expense.amount}"),
+                    trailing: IconButton(icon: Icon(Icons.delete),onPressed: ()=>print('delete'),),
+                  );
+                  },
+
+              );
             } else if (snapshot.hasError) {
               return Text("${snapshot.error}");
             }
