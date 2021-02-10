@@ -12,7 +12,7 @@ class User {
       userName: json['userName'],
       email: json['email'],
       picture: json['picture'],
-      userId: json['userId'],
+      userId: json['id'],
       token: json['token'],
     );
   }

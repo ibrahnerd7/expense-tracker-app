@@ -23,7 +23,8 @@ class _SignInScreenState extends State<SignInScreen> {
 
   void collectUserInput(String userName, String password) async {
     User user = await signInUser(userName, password);
-    print(user.token);
+    //save token to some local storage, to be used in subsequent requests;
+
   }
 
   Future<User> signInUser(String userName, String password) async {
