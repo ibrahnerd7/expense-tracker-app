@@ -93,7 +93,11 @@ class _ExpensesState extends State<Expenses> {
   void handleClick(String value) {
     switch (value) {
       case 'Profile':
-        Get.to(ProfileScreen() );
+        Get.to(ProfileScreen());
+        break;
+      case 'Switch Theme':
+        Get.context.isDarkMode ? Get.changeTheme(ThemeData.light()) : Get
+            .changeTheme(ThemeData.dark());
         break;
       case 'Sign out':
         signOut();
@@ -118,7 +122,8 @@ class _ExpensesState extends State<Expenses> {
             icon: Icon(Icons.more_vert),
             onSelected: handleClick,
             itemBuilder: (BuildContext context) {
-              return {'Profile', 'Sign out'}.map((String choice) {
+              return {'Profile', 'Switch Theme', 'Sign out'}
+                  .map((String choice) {
                 return PopupMenuItem<String>(
                   value: choice,
                   child: Text(choice),
