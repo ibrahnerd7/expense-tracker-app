@@ -2,6 +2,9 @@
 
 A new Flutter project.
 
+- [iOS](https://i.diawi.com/aAcpNi)
+- [Android](https://i.diawi.com/69iaSE)
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
