@@ -27,7 +27,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final passwordController = TextEditingController();
 
   Future getImage() async {
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+    final pickedFile = await picker.getImage(source: ImageSource.camera);
     setState(() {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
@@ -178,51 +178,54 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         return null;
                       },
                     ),
+                    SizedBox(
+                      height: 32,
+                    ),
                     isSubmitting
                         ? CircularProgressIndicator()
-                        : Container(
-                            width: double.infinity,
-                            margin: EdgeInsets.only(top: 32),
-                            child: Expanded(
-                              child: FlatButton(
-                                child: Text(
-                                  'Create Account',
-                                  style: TextStyle(fontSize: 22.0),
-                                ),
-                                color: Colors.blueAccent,
-                                textColor: Colors.white,
-                                onPressed: () async {
-                                  setState(() {
-                                    isSubmitting = true;
-                                  });
+                        : Row(
+                            children: [
+                              Expanded(
+                                child: FlatButton(
+                                  child: Text(
+                                    'Create Account',
+                                    style: TextStyle(fontSize: 22.0),
+                                  ),
+                                  color: Colors.blueAccent,
+                                  textColor: Colors.white,
+                                  onPressed: () async {
+                                    setState(() {
+                                      isSubmitting = true;
+                                    });
 
-                                  if (_formKey.currentState.validate()) {
-                                    String pictureUrl =
-                                        await uploadImageToFirebase(context);
-                                    collectUserInput(
-                                        userNameController.text,
-                                        emailController.text,
-                                        pictureUrl,
-                                        passwordController.text);
-                                  }
-                                },
-                              ),
+                                    if (_formKey.currentState.validate()) {
+                                      String pictureUrl =
+                                          await uploadImageToFirebase(context);
+                                      collectUserInput(
+                                          userNameController.text,
+                                          emailController.text,
+                                          pictureUrl,
+                                          passwordController.text);
+                                    }
+                                  },
+                                ),
+                              )
+                            ],
+                          ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextButton(
+                            child: Text(
+                              "Already have an account? Sign In here",
+                              style: TextStyle(fontSize: 17.0),
                             ),
+                            onPressed: () {
+                              Navigator.pushNamed(context, "Sign In");
+                            },
                           ),
-                    Container(
-                      width: double.infinity,
-                      margin: EdgeInsets.only(top: 32),
-                      child: Expanded(
-                        child: TextButton(
-                          child: Text(
-                            "Already have an account? Sign In here",
-                            style: TextStyle(fontSize: 17.0),
-                          ),
-                          onPressed: () {
-                            Navigator.pushNamed(context, "Sign In");
-                          },
-                        ),
-                      ),
+                        )
+                      ],
                     ),
                   ],
                 )),

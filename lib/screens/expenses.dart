@@ -34,13 +34,11 @@ class _ExpensesState extends State<Expenses> {
     if (response.statusCode == 200) {
       List<dynamic> values = new List<dynamic>();
       values = json.decode(response.body);
-      print(values);
       if (values.length > 0) {
         for (int i = 0; i < values.length; i++) {
           if (values[i] != null) {
             Map<String, dynamic> map = values[i];
             futureExpenses.add(Expense.fromJson(map));
-            debugPrint('Id-------${map['id']}');
           }
         }
       }

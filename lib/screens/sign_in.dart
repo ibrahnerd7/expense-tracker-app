@@ -36,6 +36,8 @@ class _SignInScreenState extends State<SignInScreen> {
     setState(() {
       isSubmitting = false;
     });
+    userNameController.text = '';
+    passwordController.text = '';
   }
 
   void saveAuthToken(String authToken) async {
@@ -101,7 +103,9 @@ class _SignInScreenState extends State<SignInScreen> {
                     TextFormField(
                       controller: passwordController,
                       keyboardType: TextInputType.visiblePassword,
-                      decoration: InputDecoration(labelText: "Password"),
+                      decoration: InputDecoration(
+                        labelText: "Password",
+                      ),
                       validator: (value) {
                         if (value.isEmpty) {
                           return 'Please enter some password';
@@ -109,46 +113,46 @@ class _SignInScreenState extends State<SignInScreen> {
                         return null;
                       },
                     ),
+                    SizedBox(
+                      height: 32,
+                    ),
                     isSubmitting
                         ? CircularProgressIndicator()
-                        : Container(
-                      width: double.infinity,
-                      margin: EdgeInsets.only(top: 32),
-                      child: Expanded(
-                        child: FlatButton(
-                          child: Text(
-                            'Sign In',
-                            style: TextStyle(fontSize: 22.0),
+                        : Row(children: [
+                            Expanded(
+                              child: FlatButton(
+                                child: Text(
+                                  'Sign In',
+                                  style: TextStyle(fontSize: 22.0),
+                                ),
+                                color: Colors.blueAccent,
+                                textColor: Colors.white,
+                                onPressed: () {
+                                  if (_formKey.currentState.validate()) {
+                                    setState(() {
+                                      isSubmitting = true;
+                                    });
+                                    collectUserInput(userNameController.text,
+                                        passwordController.text);
+                                  }
+                                },
+                              ),
+                            ),
+                          ]),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextButton(
+                            child: Text(
+                              "Don't have an account? Create here",
+                              style: TextStyle(fontSize: 17.0),
+                            ),
+                            onPressed: () {
+                              Navigator.pushNamed(context, "Sign Up");
+                            },
                           ),
-                          color: Colors.blueAccent,
-                          textColor: Colors.white,
-                          onPressed: () {
-                            if (_formKey.currentState.validate()) {
-                              setState(() {
-                                isSubmitting = true;
-                              });
-                              collectUserInput(
-                                  userNameController.text,
-                                  passwordController.text);
-                            }
-                          },
                         ),
-                      ),
-                    ),
-                    Container(
-                      width: double.infinity,
-                      margin: EdgeInsets.only(top: 32),
-                      child: Expanded(
-                        child: TextButton(
-                          child: Text(
-                            "Don't have an account? Create here",
-                            style: TextStyle(fontSize: 17.0),
-                          ),
-                          onPressed: () {
-                            Navigator.pushNamed(context, "Sign Up");
-                          },
-                        ),
-                      ),
+                      ],
                     ),
                   ],
                 )),

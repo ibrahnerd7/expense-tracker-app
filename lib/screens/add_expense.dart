@@ -32,7 +32,8 @@ class _AddExpenseState extends State<AddExpense> {
   final amountController = TextEditingController();
 
   Future getImage() async {
-    final pickedFile = await picker.getImage(source: ImageSource.camera,imageQuality: 60);
+    final pickedFile =
+        await picker.getImage(source: ImageSource.camera, imageQuality: 60);
     setState(() {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
@@ -127,7 +128,7 @@ class _AddExpenseState extends State<AddExpense> {
                 Form(
                     key: _formKey,
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         TextFormField(
                           keyboardType: TextInputType.text,
@@ -178,6 +179,8 @@ class _AddExpenseState extends State<AddExpense> {
                               ? Text('Select an image')
                               : Image.file(
                                   _image,
+                                  width: 200,
+                                  height: 100,
                                 ),
                         ),
                         OutlineButton(
@@ -192,34 +195,34 @@ class _AddExpenseState extends State<AddExpense> {
                         ),
                         isSubmmiting
                             ? CircularProgressIndicator()
-                            : Container(
-                                width: double.infinity,
-                                margin: EdgeInsets.only(top: 32),
-                                child: Expanded(
-                                  child: FlatButton(
-                                    child: Text(
-                                      'Save',
-                                      style: TextStyle(fontSize: 22.0),
+                            : Row(
+                                children: [
+                                  Expanded(
+                                    child: FlatButton(
+                                      child: Text(
+                                        'Save',
+                                        style: TextStyle(fontSize: 22.0),
+                                      ),
+                                      color: Colors.blueAccent,
+                                      textColor: Colors.white,
+                                      onPressed: () async {
+                                        if (_formKey.currentState.validate()) {
+                                          setState(() {
+                                            isSubmmiting = true;
+                                          });
+                                          String pictureUrl =
+                                              await uploadImageToFirebase(
+                                                  context);
+                                          collectUserInput(
+                                              titleController.text,
+                                              descriptionController.text,
+                                              amountController.text,
+                                              pictureUrl);
+                                        }
+                                      },
                                     ),
-                                    color: Colors.blueAccent,
-                                    textColor: Colors.white,
-                                    onPressed: () async {
-                                      if (_formKey.currentState.validate()) {
-                                        setState(() {
-                                          isSubmmiting = true;
-                                        });
-                                        String pictureUrl =
-                                            await uploadImageToFirebase(
-                                                context);
-                                        collectUserInput(
-                                            titleController.text,
-                                            descriptionController.text,
-                                            amountController.text,
-                                            pictureUrl);
-                                      }
-                                    },
-                                  ),
-                                ),
+                                  )
+                                ],
                               ),
                       ],
                     ))
